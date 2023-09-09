@@ -2,11 +2,15 @@ package com.example.security1337.config;
 
 import static
 import com.example.security1337.token.JwtTokenManager;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +25,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenManager jwtTokenManager;
@@ -42,7 +47,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     );
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
+            } catch (MalformedJwtException exception) {
+                log.debug(exception.getMessage());
+            } catch (ExpiredJwtException exception) {
+                log.debug(exception.getMessage());
+            } catch (SignatureException exception) {
+                log.debug(exception.getMessage());
             }
+
         }
         
     }
