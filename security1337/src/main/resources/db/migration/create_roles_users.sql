@@ -11,7 +11,7 @@ create table users
   id bigserial constraint user_pk primary key,
   username varchar(50) not null constraint user_pk2 unique,
   password varchar(50) not null,
-  role_id bigserial not null constraint users_roles_id_fk references roles
+  role_id bigserial not null references roles
 );
 
 

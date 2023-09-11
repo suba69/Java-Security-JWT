@@ -1,5 +1,6 @@
 package com.example.security1337.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -14,6 +15,7 @@ import java.util.List;
 @Table(name = "roles")
 public class Role extends BaseDomain {
 
+       @Column(name = "name_role")
        private String name;
 
        @OneToMany

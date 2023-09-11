@@ -20,7 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 @Component
-public class JwtTokenManager {
+public class  JwtTokenManager {
 
    private final Key key;
 
@@ -32,13 +32,12 @@ public class JwtTokenManager {
    }
 
    public String getJwtToken(UserDetails userDetails) {
-
       Map<String, Object> claims = new HashMap<>();
       List<String> roles = userDetails.getAuthorities().stream()
               .map(GrantedAuthority::getAuthority).toList();
       claims.put("roles", roles);
       Date issuedDate = new Date();
-      Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMinutes());
+      Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
       return Jwts.builder()
               .setClaims(claims)
               .setSubject(userDetails.getUsername())
@@ -49,23 +48,19 @@ public class JwtTokenManager {
    }
 
    public String getUsername(String token) {
-      Claims body = Jwts
-              .parserBuilder()
-              .setSigningKey(key)
-              .build()
-              .parseClaimsJws(token)
-              .getBody();
-              return body.getSubject();
+      return getAllClaimsFromToken(token).getSubject();
    }
 
    public List<String> getUserRoles(String token) {
-      Claims body = Jwts
-              .parserBuilder()
+      return getAllClaimsFromToken(token).get("roles", List.class);
+   }
+
+   private Claims getAllClaimsFromToken(String token) {
+      return Jwts.parserBuilder()
               .setSigningKey(key)
               .build()
               .parseClaimsJws(token)
               .getBody();
-      return body.get("roles", List.class);
    }
 
 }

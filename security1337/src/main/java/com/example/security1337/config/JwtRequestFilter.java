@@ -1,6 +1,5 @@
 package com.example.security1337.config;
 
-import static
 import com.example.security1337.token.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -32,7 +31,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = request.getHeader(AUTHORIZATION);
+        String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Bearer")) {
             String jwt = authorization.substring(7);
             try {
@@ -49,13 +48,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             } catch (MalformedJwtException exception) {
                 log.debug(exception.getMessage());
-            } catch (ExpiredJwtException exception) {
-                log.debug(exception.getMessage());
-            } catch (SignatureException exception) {
-                log.debug(exception.getMessage());
             }
-
         }
-        
+        filterChain.doFilter(request, response);
     }
 }
