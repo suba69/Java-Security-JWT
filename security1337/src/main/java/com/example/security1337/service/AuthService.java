@@ -19,7 +19,6 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
     private final JwtTokenManager jwtTokenManager;
 
-
     public String getToken(@RequestBody JwtRequest jwtRequest) throws BadCredentialsException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(),
                 jwtRequest.getPassword()));

@@ -62,5 +62,4 @@ public class  JwtTokenManager {
               .parseClaimsJws(token)
               .getBody();
    }
-
 }
